@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimisticLog } from "@/hooks/use-optimistic-log";
+import { useState } from "react";
 import type { Exercise } from "@/lib/types";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { Check } from "lucide-react";
@@ -16,12 +16,48 @@ export function WorkoutLogger({
   initialExercises,
   onUpdate,
 }: WorkoutLoggerProps) {
-  const { exercises, toggleExercise, isPending } =
-    useOptimisticLog(initialExercises);
+  return (
+    <WorkoutLoggerInner
+      initialExercises={initialExercises}
+      onToggle={(updated) => onUpdate(workoutId, updated)}
+    />
+  );
+}
+
+// Demo version — no server action needed
+export function WorkoutLoggerDemo({
+  initialExercises,
+}: {
+  initialExercises: Exercise[];
+}) {
+  return (
+    <WorkoutLoggerInner
+      initialExercises={initialExercises}
+      onToggle={async () => {}}
+    />
+  );
+}
+
+function WorkoutLoggerInner({
+  initialExercises,
+  onToggle,
+}: {
+  initialExercises: Exercise[];
+  onToggle: (exercises: Exercise[]) => Promise<void>;
+}) {
+  const [exercises, setExercises] = useState(initialExercises);
 
   const completedCount = exercises.filter((e) => e.completed).length;
   const progress =
     exercises.length > 0 ? (completedCount / exercises.length) * 100 : 0;
+
+  function toggle(index: number) {
+    const updated = exercises.map((ex, i) =>
+      i === index ? { ...ex, completed: !ex.completed } : ex
+    );
+    setExercises(updated);
+    onToggle(updated);
+  }
 
   return (
     <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
@@ -48,12 +84,7 @@ export function WorkoutLogger({
           >
             <Checkbox.Root
               checked={exercise.completed}
-              onCheckedChange={() =>
-                toggleExercise(index, (updated) =>
-                  onUpdate(workoutId, updated)
-                )
-              }
-              disabled={isPending}
+              onCheckedChange={() => toggle(index)}
               className="flex h-5 w-5 items-center justify-center rounded border border-white/20 bg-white/5 data-[state=checked]:border-green-500 data-[state=checked]:bg-green-500"
             >
               <Checkbox.Indicator>
