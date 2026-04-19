@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Dumbbell,
@@ -18,6 +18,7 @@ const navItems = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <aside className="flex h-full w-[260px] flex-col border-r border-white/[0.06] bg-[#08080c]/80 backdrop-blur-xl px-3 py-5">
@@ -69,7 +70,10 @@ export function Sidebar() {
 
       {/* Bottom section */}
       <div className="mt-auto space-y-1 border-t border-white/[0.06] pt-3">
-        <button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-muted transition-all duration-150 hover:bg-white/[0.04] hover:text-foreground">
+        <button
+          onClick={() => router.push("/login")}
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-muted transition-all duration-150 hover:bg-white/[0.04] hover:text-foreground"
+        >
           <LogOut className="h-[18px] w-[18px]" />
           Sign Out
         </button>
