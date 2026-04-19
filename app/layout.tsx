@@ -28,8 +28,13 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full bg-[#0a0a0a] text-[#ededed] font-sans">
-        {children}
+      <body className="min-h-full bg-background text-foreground font-sans">
+        {/* Ambient gradient blobs */}
+        <div className="gradient-blob" style={{ top: "-200px", left: "-100px", background: "radial-gradient(circle, #a855f7 0%, transparent 70%)" }} />
+        <div className="gradient-blob" style={{ bottom: "-200px", right: "-100px", background: "radial-gradient(circle, #6366f1 0%, transparent 70%)" }} />
+        <div className="relative z-10 bg-grid min-h-full">
+          {children}
+        </div>
       </body>
     </html>
   );
